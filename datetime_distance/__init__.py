@@ -6,6 +6,16 @@ from string import ascii_lowercase
 
 import numpy as np
 from dateutil.parser import parse
+import dateutil.parser as parser
+
+
+# Monkey patch the parser module to get resolution
+def resolution(self, timestr, default=None,
+               ignoretz=False, tzinfos=None,
+               **kwargs):
+    return self._parse(timestr, **kwargs)
+
+parser.parser.resolution = resolution
 
 
 class DateTimeComparator(object):
@@ -84,38 +94,20 @@ class DateTimeComparator(object):
 
     def _get_resolution(self, a, b, field_1, field_2):
 
-        today = datetime.today()
+        res_a = parser.parser().resolution(field_1)[0]
+        res_b = parser.parser().resolution(field_2)[0]
 
-        # Seconds are simple: if the datetime object
-        # stores them, that's the highest resolution
-        if a.second > 0 and b.second > 0:
+        if res_a.second and res_b.second:
             resolution = 'seconds'
 
-        # We'll have to be a little more clever to deal with days/months/years,
-        # since dateutil's parser will default to today's day/month if either
-        # of those attributes are missing
-        elif a.day != today.day and b.day != today.day:
+        elif res_a.day and res_b.day:
             resolution = 'days'
 
+        elif res_a.month and res_b.month:
+            resolution = 'months'
+
         else:
-
-            f1, f2 = field_1.replace(' ', ''), field_2.replace(' ', '')
-
-            # Assume year fields can't be longer than 4 chars ('2017')
-            if ((a.month == today.month and len(f1) <= 4) or
-                (b.month == today.month and len(f2) <= 4)):
-
-                resolution = 'years'
-
-            # Use a separate method for figuring out months
-            elif ((a.day == today.day and self._is_month(field_1)) or
-                  (b.day == today.day and self._is_month(field_2))):
-
-                resolution = 'months'
-
-            else:
-
-                resolution = 'days'
+            resolution = 'years'
 
         return resolution
 
