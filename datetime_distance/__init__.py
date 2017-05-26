@@ -46,7 +46,7 @@ class DateTimeComparator(object):
             diff = 0
 
             # Figure out the resolution of the inputs
-            resolution = self._get_resolution(a, b, field_1, field_2)
+            resolution = self._get_resolution(field_1, field_2)
 
             return self._format_output(diff, resolution)
 
@@ -62,7 +62,7 @@ class DateTimeComparator(object):
             delta = greater - lesser
 
             # Determine resolution of the output
-            resolution = self._get_resolution(a, b, field_1, field_2)
+            resolution = self._get_resolution(field_1, field_2)
 
             if resolution == 'years':
 
@@ -92,7 +92,7 @@ class DateTimeComparator(object):
 
         return self._format_output(diff, resolution)
 
-    def _get_resolution(self, a, b, field_1, field_2):
+    def _get_resolution(self, field_1, field_2):
 
         res_a = parser.parser().resolution(field_1)[0]
         res_b = parser.parser().resolution(field_2)[0]
