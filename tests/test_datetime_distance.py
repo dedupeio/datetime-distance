@@ -3,6 +3,7 @@ import unittest
 
 import numpy as np
 
+import env
 from datetime_distance import DateTimeComparator
 
 
@@ -17,7 +18,10 @@ class DateTimeTest(unittest.TestCase):
         distance = c(dt1, dt2)
         expected = (np.nan, math.log10(144), np.nan, np.nan)
 
-        self.assertAlmostEqual(distance, expected)
+        print(distance)
+        print(expected)
+
+        self.assertEqual(distance, expected)
 
     def test_datetime_to_timestamp_comparison(self):
 
@@ -26,9 +30,9 @@ class DateTimeTest(unittest.TestCase):
 
         c = DateTimeComparator()
         distance = c(dt1, dt2)
-        expected = (np.nan, math.log10(144), np.nan, np.nan)
+        expected = (np.nan, math.log10(143), np.nan, np.nan)
 
-        self.assertAlmostEqual(distance, expected)
+        self.assertEqual(distance, expected)
 
     def test_timestamp_to_timestamp_comparison(self):
 
@@ -39,7 +43,7 @@ class DateTimeTest(unittest.TestCase):
         distance = c(dt1, dt2)
         expected = (math.log10(12472684), np.nan, np.nan, np.nan)
 
-        self.assertAlmostEqual(distance, expected)
+        self.assertEqual(distance, expected)
 
     def test_years(self):
 
@@ -50,7 +54,7 @@ class DateTimeTest(unittest.TestCase):
         distance = c(dt1, dt2)
         expected = (np.nan, np.nan, np.nan, math.log10(2))
 
-        self.assertAlmostEqual(distance, expected)
+        self.assertEqual(distance, expected)
 
     def test_months(self):
 
@@ -61,7 +65,7 @@ class DateTimeTest(unittest.TestCase):
         distance = c(dt1, dt2)
         expected = (np.nan, np.nan, math.log10(13), np.nan)
 
-        self.assertAlmostEqual(distance, expected)
+        self.assertEqual(distance, expected)
 
     def test_days(self):
 
@@ -70,31 +74,37 @@ class DateTimeTest(unittest.TestCase):
 
         c = DateTimeComparator()
         distance = c(dt1, dt2)
-        expected = (np.nan, math.log(35), np.nan, np.nan)
+        expected = (np.nan, math.log10(35), np.nan, np.nan)
 
-        self.assertAlmostEqual(distance, expected)
+        self.assertEqual(distance, expected)
 
-    def test_strange_formats(self):
+    def test_alternate_formats(self):
+
+        c = DateTimeComparator()
 
         dt1 = 'May 5th, 2013'
-        dt2 = '2013-09-06'
+        dt2 = '2013-06-09'
+
+        distance1 = c(dt1, dt2)
+        expected1 = (np.nan, math.log10(35), np.nan, np.nan)
+
+        self.assertEqual(distance1, expected1)
 
         dt3 = '11am May 5th 2013'
-        dt4 = 'June 6th 2014'
+        dt4 = 'June 9th 2013'
+
+        distance2 = c(dt3, dt4)
+        expected2 = (np.nan, math.log10(34), np.nan, np.nan)
+
+        self.assertEqual(distance2, expected2)
 
         dt5 = '5/5/2013'
         dt6 = '6/9/2013'
 
-        c = DateTimeComparator()
-
-        distance1 = c(dt1, dt2)
-        distance2 = c(dt3, dt4)
         distance3 = c(dt5, dt6)
-        expected = (np.nan, math.log(35), np.nan, np.nan)
+        expected3 = expected1
 
-        self.assertAlmostEqual(distance1, expected)
-        self.assertAlmostEqual(distance2, expected)
-        self.assertAlmostEqual(distance3, expected)
+        self.assertEqual(distance3, expected3)
 
     def test_misspellings(self):
         pass
