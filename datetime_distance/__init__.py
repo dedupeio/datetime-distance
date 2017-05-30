@@ -66,7 +66,7 @@ class DateTimeComparator(object):
 
             if resolution == 'years':
 
-                diff = math.log10(greater.year - lesser.year)
+                diff = math.sqrt(greater.year - lesser.year)
 
             elif resolution == 'months':
 
@@ -80,15 +80,15 @@ class DateTimeComparator(object):
 
                 total_months = (12 * yearly_delta) + monthly_delta
 
-                diff = math.log10(total_months)
+                diff = math.sqrt(total_months)
 
             elif resolution == 'days':
 
-                diff = math.log10(delta.days)
+                diff = math.sqrt(delta.days)
 
             elif resolution == 'seconds':
 
-                diff = math.log10(delta.total_seconds())
+                diff = math.sqrt(delta.total_seconds())
 
         return self._format_output(diff, resolution)
 
@@ -111,16 +111,6 @@ class DateTimeComparator(object):
 
         return resolution
 
-    def _is_month(self, a):
-
-        # Assume month fields must contain either alphabet characters or
-        # only one hyphen, slash, or dot ('5/2017', '5.2017', '5-2017',
-        # or 'May 2017')
-        separators = ('.', ',', '/')
-
-        return (any([ltr in a.lower() for ltr in list(ascii_lowercase)]) or
-                len(a.split(s)) > 2 for s in separators)
-
     def _format_output(self, diff, resolution):
 
         # Map output indeces to make code more readiable
@@ -130,7 +120,7 @@ class DateTimeComparator(object):
                    'years':   3}
 
         # Format output template with the right resolution and delta
-        output = [np.nan, np.nan, np.nan, np.nan]
+        output = np.zeros(4)
         output[res_map[resolution]] = diff
 
         return tuple(output)

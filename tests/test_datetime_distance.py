@@ -16,12 +16,12 @@ class DateTimeTest(unittest.TestCase):
 
         c = DateTimeComparator()
         distance = c(dt1, dt2)
-        expected = (np.nan, math.log10(144), np.nan, np.nan)
+        expected = np.array([0, math.sqrt(144), 0, 0])
 
         print(distance)
         print(expected)
 
-        self.assertEqual(distance, expected)
+        np.testing.assert_array_equal(distance, expected)
 
     def test_datetime_to_timestamp_comparison(self):
 
@@ -30,9 +30,9 @@ class DateTimeTest(unittest.TestCase):
 
         c = DateTimeComparator()
         distance = c(dt1, dt2)
-        expected = (np.nan, math.log10(143), np.nan, np.nan)
+        expected = np.array([0, math.sqrt(143), 0, 0])
 
-        self.assertEqual(distance, expected)
+        np.testing.assert_array_equal(distance, expected)
 
     def test_timestamp_to_timestamp_comparison(self):
 
@@ -41,9 +41,9 @@ class DateTimeTest(unittest.TestCase):
 
         c = DateTimeComparator()
         distance = c(dt1, dt2)
-        expected = (math.log10(12472684), np.nan, np.nan, np.nan)
+        expected = np.array([math.sqrt(12472684), 0, 0, 0])
 
-        self.assertEqual(distance, expected)
+        np.testing.assert_array_equal(distance, expected)
 
     def test_years(self):
 
@@ -52,9 +52,9 @@ class DateTimeTest(unittest.TestCase):
 
         c = DateTimeComparator()
         distance = c(dt1, dt2)
-        expected = (np.nan, np.nan, np.nan, math.log10(2))
+        expected = np.array([0, 0, 0, math.sqrt(2)])
 
-        self.assertEqual(distance, expected)
+        np.testing.assert_array_equal(distance, expected)
 
     def test_months(self):
 
@@ -63,9 +63,9 @@ class DateTimeTest(unittest.TestCase):
 
         c = DateTimeComparator()
         distance = c(dt1, dt2)
-        expected = (np.nan, np.nan, math.log10(13), np.nan)
+        expected = np.array([0, 0, math.sqrt(13), 0])
 
-        self.assertEqual(distance, expected)
+        np.testing.assert_array_equal(distance, expected)
 
     def test_days(self):
 
@@ -74,9 +74,9 @@ class DateTimeTest(unittest.TestCase):
 
         c = DateTimeComparator()
         distance = c(dt1, dt2)
-        expected = (np.nan, math.log10(35), np.nan, np.nan)
+        expected = np.array([0, math.sqrt(35), 0, 0])
 
-        self.assertEqual(distance, expected)
+        np.testing.assert_array_equal(distance, expected)
 
     def test_alternate_formats(self):
 
@@ -86,17 +86,17 @@ class DateTimeTest(unittest.TestCase):
         dt2 = '2013-06-09'
 
         distance1 = c(dt1, dt2)
-        expected1 = (np.nan, math.log10(35), np.nan, np.nan)
+        expected1 = np.array([0, math.sqrt(35), 0, 0])
 
-        self.assertEqual(distance1, expected1)
+        np.testing.assert_array_equal(distance1, expected1)
 
         dt3 = '11am May 5th 2013'
         dt4 = 'June 9th 2013'
 
         distance2 = c(dt3, dt4)
-        expected2 = (np.nan, math.log10(34), np.nan, np.nan)
+        expected2 = np.array([0, math.sqrt(34), 0, 0])
 
-        self.assertEqual(distance2, expected2)
+        np.testing.assert_array_equal(distance2, expected2)
 
         dt5 = '5/5/2013'
         dt6 = '6/9/2013'
@@ -104,7 +104,7 @@ class DateTimeTest(unittest.TestCase):
         distance3 = c(dt5, dt6)
         expected3 = expected1
 
-        self.assertEqual(distance3, expected3)
+        np.testing.assert_array_equal(distance3, expected3)
 
     def test_misspellings(self):
         pass
