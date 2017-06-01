@@ -24,11 +24,10 @@ install:
 script:
     - pytest tests
 deploy:
-    - provider: pypi
-      skip_cleanup: true
-      user: datamade.wheelbuilder
-      on:
+    provider: pypi
+    user: datamade.wheelbuilder
+    on:
         tags: true
-        condition: "$TRAVIS_OS_NAME = osx"
-      distributions: bdist_wheel
-      password: $PYPIPASSWORD
+    distributions: "sdist bdist_wheel"
+    password:
+        secure: ekZ4r80FJGHSf/gYhW+2URDgOFM3vCMOZOJ8D0r4TXI/OWqBwr7eaGi77YZBf3gINME3AMg4TVjStQJ6LhTFht4833jWh2Y1PxDNhlQZFkmRAbgZuSCA3CVihrlDvf+tgd53xIKOjg5qWh2kVjgs/PYwdACWdCcYiS422G3ZMLJ4WOz2zsjZeG/yYJEphkZ8AsKd5S1WgHxNrvYmCcO42nsvrQqVftEdtjm3UL5YlLXU+DbbTREwpwJ3+ST2YfK/zxayMD/kCUJKahyuNjHavdt0xoFcM8y5kG1oSRc2UAggELSWZGjnm6MPH2T+O4nL04b7xW/yoBvFPkylD8PBgvNf4tAfo4Nl4ZC57+hsUGDd9ofo9NxUBGQZl5VNVv2c9d0ctKYNLn1IB6lGS71UBCTnPOJ5KTdvyaMhnBN3Wd9cSEaGK73m9uhUwrlW80muJxBUi8X8w7oCs2q1s9GL7sPIpHzCB6AHGh+PdzWlXHYUgnTW5mlP3c9v3U771aJ/No7hiLyX61gG3pQZPPmWGqhC/Mwsvm+EU/QwCffi88tXnJQF0PKrysbuFCYMtk79SjB2akoRo5eupziaSyLKyfcuI3783RGq8x/R0NrOrsgsjXt+D8vI3x3Lk1ALA2gno9ANfvOOgH+QPF8TT1NtefNndjUnqhiIk+CI80tYuFE=
