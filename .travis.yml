@@ -22,7 +22,7 @@ install:
     - pip install --upgrade -r dev-requirements.txt
     - pip install -e .
 script:
-    - pytest tests
+    - pytest -v tests
 deploy:
     - provider: pypi
       skip_cleanup: true
