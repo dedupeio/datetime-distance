@@ -120,7 +120,9 @@ class DateTimeComparator(object):
                    'years':   3}
 
         # Format output template with the right resolution and delta
-        output = np.zeros(4)
-        output[res_map[resolution]] = diff
+        output = np.zeros(8)
+        # Set dummy variables and distance for the right resolution
+        output[res_map[resolution]] = 1
+        output[4 + res_map[resolution]] = diff
 
         return tuple(output)

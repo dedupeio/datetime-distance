@@ -1,110 +1,106 @@
 import math
-import unittest
 
 import numpy as np
 
 import env
 from datetime_distance import DateTimeComparator
 
+def test_datetime_to_datetime_comparison():
 
-class DateTimeTest(unittest.TestCase):
+    dt1 = '2017-05-25'
+    dt2 = '2017-01-01'
 
-    def test_datetime_to_datetime_comparison(self):
+    c = DateTimeComparator()
+    distance = c(dt1, dt2)
+    expected = np.array([0, 1, 0, 0, 0, math.sqrt(144), 0, 0])
 
-        dt1 = '2017-05-25'
-        dt2 = '2017-01-01'
+    print(distance)
+    print(expected)
 
-        c = DateTimeComparator()
-        distance = c(dt1, dt2)
-        expected = np.array([0, math.sqrt(144), 0, 0])
+    np.testing.assert_array_equal(distance, expected)
 
-        print(distance)
-        print(expected)
+def test_datetime_to_timestamp_comparison():
 
-        np.testing.assert_array_equal(distance, expected)
+    dt1 = '2017-05-25'
+    dt2 = '2017-01-01 12:30:05'
 
-    def test_datetime_to_timestamp_comparison(self):
+    c = DateTimeComparator()
+    distance = c(dt1, dt2)
+    expected = np.array([0, 1, 0, 0, 0, math.sqrt(143), 0, 0])
 
-        dt1 = '2017-05-25'
-        dt2 = '2017-01-01 12:30:05'
+    np.testing.assert_array_equal(distance, expected)
 
-        c = DateTimeComparator()
-        distance = c(dt1, dt2)
-        expected = np.array([0, math.sqrt(143), 0, 0])
+def test_timestamp_to_timestamp_comparison():
 
-        np.testing.assert_array_equal(distance, expected)
+    dt1 = '2017-05-25 21:08:09'
+    dt2 = '2017-01-01 12:30:05'
 
-    def test_timestamp_to_timestamp_comparison(self):
+    c = DateTimeComparator()
+    distance = c(dt1, dt2)
+    expected = np.array([1, 0, 0, 0, math.sqrt(12472684), 0, 0, 0])
 
-        dt1 = '2017-05-25 21:08:09'
-        dt2 = '2017-01-01 12:30:05'
+    np.testing.assert_array_equal(distance, expected)
 
-        c = DateTimeComparator()
-        distance = c(dt1, dt2)
-        expected = np.array([math.sqrt(12472684), 0, 0, 0])
+def test_years():
 
-        np.testing.assert_array_equal(distance, expected)
+    dt1 = '2012'
+    dt2 = '2010'
 
-    def test_years(self):
+    c = DateTimeComparator()
+    distance = c(dt1, dt2)
+    expected = np.array([0, 0, 0, 1, 0, 0, 0, math.sqrt(2)])
 
-        dt1 = '2012'
-        dt2 = '2010'
+    np.testing.assert_array_equal(distance, expected)
 
-        c = DateTimeComparator()
-        distance = c(dt1, dt2)
-        expected = np.array([0, 0, 0, math.sqrt(2)])
+def test_months():
 
-        np.testing.assert_array_equal(distance, expected)
+    dt1 = 'May 2012'
+    dt2 = 'June 2013'
 
-    def test_months(self):
+    c = DateTimeComparator()
+    distance = c(dt1, dt2)
+    expected = np.array([0, 0, 1, 0, 0, 0, math.sqrt(13), 0])
 
-        dt1 = 'May 2012'
-        dt2 = 'June 2013'
+    np.testing.assert_array_equal(distance, expected)
 
-        c = DateTimeComparator()
-        distance = c(dt1, dt2)
-        expected = np.array([0, 0, math.sqrt(13), 0])
+def test_days():
 
-        np.testing.assert_array_equal(distance, expected)
+    dt1 = '5 May 2013'
+    dt2 = '9 June 2013'
 
-    def test_days(self):
+    c = DateTimeComparator()
+    distance = c(dt1, dt2)
+    expected = np.array([0, 1, 0, 0, 0, math.sqrt(35), 0, 0])
 
-        dt1 = '5 May 2013'
-        dt2 = '9 June 2013'
+    np.testing.assert_array_equal(distance, expected)
 
-        c = DateTimeComparator()
-        distance = c(dt1, dt2)
-        expected = np.array([0, math.sqrt(35), 0, 0])
+def test_alternate_formats():
 
-        np.testing.assert_array_equal(distance, expected)
+    c = DateTimeComparator()
 
-    def test_alternate_formats(self):
+    dt1 = 'May 5th, 2013'
+    dt2 = '2013-06-09'
 
-        c = DateTimeComparator()
+    distance1 = c(dt1, dt2)
+    expected1 = np.array([0, 1, 0, 0, 0, math.sqrt(35), 0, 0])
 
-        dt1 = 'May 5th, 2013'
-        dt2 = '2013-06-09'
+    np.testing.assert_array_equal(distance1, expected1)
 
-        distance1 = c(dt1, dt2)
-        expected1 = np.array([0, math.sqrt(35), 0, 0])
+    dt3 = '11am May 5th 2013'
+    dt4 = 'June 9th 2013'
 
-        np.testing.assert_array_equal(distance1, expected1)
+    distance2 = c(dt3, dt4)
+    expected2 = np.array([0, 1, 0, 0, 0, math.sqrt(34), 0, 0])
 
-        dt3 = '11am May 5th 2013'
-        dt4 = 'June 9th 2013'
+    np.testing.assert_array_equal(distance2, expected2)
 
-        distance2 = c(dt3, dt4)
-        expected2 = np.array([0, math.sqrt(34), 0, 0])
+    dt5 = '5/5/2013'
+    dt6 = '6/9/2013'
 
-        np.testing.assert_array_equal(distance2, expected2)
+    distance3 = c(dt5, dt6)
+    expected3 = expected1
 
-        dt5 = '5/5/2013'
-        dt6 = '6/9/2013'
+    np.testing.assert_array_equal(distance3, expected3)
 
-        distance3 = c(dt5, dt6)
-        expected3 = expected1
-
-        np.testing.assert_array_equal(distance3, expected3)
-
-    def test_misspellings(self):
-        pass
+def test_misspellings():
+    pass
