@@ -2,7 +2,7 @@ branches:
     only:
         - master
         - "/^v.*$/"
-language: python
+language: generic
 matrix:
     include:
         - os: linux
