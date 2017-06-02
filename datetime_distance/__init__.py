@@ -32,6 +32,9 @@ class DateTimeComparator(object):
                         'months':  2,
                         'years':   3}
 
+        # Make the resolution parser a class method
+        self.parse_resolution = parser.parser().resolution
+
     def __call__(self, field_1, field_2):
 
         a = parse(field_1,
@@ -101,8 +104,8 @@ class DateTimeComparator(object):
 
     def _get_resolution(self, field_1, field_2):
 
-        res_a = parser.parser().resolution(field_1)[0]
-        res_b = parser.parser().resolution(field_2)[0]
+        res_a = self.parse_resolution(field_1)[0]
+        res_b = self.parse_resolution(field_2)[0]
 
         # We have to test for NoneType here, since the parser can return
         # a falsey value of 0 in the case of 0 seconds (12:30:00)
