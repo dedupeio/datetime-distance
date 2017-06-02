@@ -6,7 +6,7 @@ except ImportError:
 setup(
     name='datetime-distance',
     url='https://github.com/dedupeio/datetime-distance',
-    version='0.1.0',
+    version='0.1.1',
     description='Compare string distances between dates, timestamps, or datetime objects.',
     packages=['datetime_distance'],
     install_requires=['python-dateutil',
