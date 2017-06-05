@@ -115,3 +115,15 @@ class DateTimeTests(TestCase):
         expected = c._make_tuple((1, 0, 0, 0, 0, 0, 0, 0))
 
         assert (distance == expected)
+
+    def test_fuzzy_parse(self):
+
+        c = DateTimeComparator()
+
+        dt1 = 'June 6th 2013'
+        dt2 = 'It happened on June 7th, 2013'
+
+        distance = c(dt1, dt2)
+        expected = c._make_tuple((0, 1, 0, 0, 0, math.sqrt(1), 0, 0))
+
+        assert (distance == expected)

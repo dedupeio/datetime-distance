@@ -35,17 +35,16 @@ class DateTimeComparator(object):
         # Make the resolution parser a class method
         self.parse_resolution = parser.parser().resolution
 
+    def parse_timestamp(self, field):
+
+        return parse(field,
+                     fuzzy=self.fuzzy,
+                     dayfirst=self.dayfirst,
+                     yearfirst=self.yearfirst)
+
     def __call__(self, field_1, field_2):
 
-        a = parse(field_1,
-                  fuzzy=self.fuzzy,
-                  dayfirst=self.dayfirst,
-                  yearfirst=self.yearfirst)
-
-        b = parse(field_2,
-                  fuzzy=self.fuzzy,
-                  dayfirst=self.dayfirst,
-                  yearfirst=self.yearfirst)
+        a, b = self.parse_timestamp(field_1), self.parse_timestamp(field_2)
 
         if a == b:
 
@@ -104,8 +103,22 @@ class DateTimeComparator(object):
 
     def _get_resolution(self, field_1, field_2):
 
-        res_a = self.parse_resolution(field_1)[0]
-        res_b = self.parse_resolution(field_2)[0]
+        try:
+            res_a = self.parse_resolution(field_1)[0]
+            assert res_a is not None
+        except (TypeError, AssertionError):
+            if self.fuzzy:
+                # We need to handle fuzzy parses of strings differently
+                a = str(self.parse_timestamp(field_1))
+                res_a = self.parse_resolution(a)[0]
+
+        try:
+            res_b = self.parse_resolution(field_2)[0]
+            assert res_b is not None
+        except (TypeError, AssertionError):
+            if self.fuzzy:
+                b = str(self.parse_timestamp(field_2))
+                res_b = self.parse_resolution(b)[0]
 
         # We have to test for NoneType here, since the parser can return
         # a falsey value of 0 in the case of 0 seconds (12:30:00)
