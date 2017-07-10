@@ -9,7 +9,7 @@ setup(
     version='0.1.2',
     description='Compare string distances between dates, timestamps, or datetime objects.',
     packages=['datetime_distance'],
-    install_requires=['python-dateutil',
+    install_requires=['python-dateutil>=2.6.0',
                       'future'],
     license='The MIT License: http://www.opensource.org/licenses/mit-license.php',
     classifiers=[
