@@ -1,7 +1,7 @@
 from __future__ import division
 
 import math
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 
 from dateutil.parser import parse
 import dateutil.parser as parser
@@ -26,11 +26,13 @@ class DateTimeComparator(object):
         self.yearfirst = yearfirst  # Ambiguous dates are parsed yy/mm/dd
         # Default is month-first
 
-        # Map output indeces to make code more readiable
-        self.res_map = {'seconds': 0,
-                        'days':    1,
-                        'months':  2,
-                        'years':   3}
+        # Map output indeces to make code more readable
+        resolutions = {'seconds': 0,
+                       'days':    1,
+                       'months':  2,
+                       'years':   3}
+        self.res_map = OrderedDict(sorted(resolutions.items(),
+                                          key=lambda x: x[1]))
 
         # Make the resolution parser a class method
         self.parse_resolution = parser.parser().resolution
